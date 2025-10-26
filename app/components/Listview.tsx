@@ -15,12 +15,12 @@ type ListviewProps = {
 };
 
 const Listview = ({ todos, onDelete, onToggle }: ListviewProps) => {
-  if (!todos || !Array.isArray(todos)) {
+  if (!todos) {
     return <p>タスクがありません</p>
   }
   return (
     <ul>
-      {todos.map((todo: Todo, i: number) => {
+      {todos.map((todo: Todo) => {
         return <li key={todo.id} className=' flex gap-4 m-4'>
           <span 
             onClick={() => onToggle(todo.id, todo.done)}
