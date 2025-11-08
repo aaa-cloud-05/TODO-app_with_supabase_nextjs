@@ -7,7 +7,7 @@ import type { User } from '@supabase/supabase-js';
 
 
 const Home = () => {
-  const [user, setUser] = useState<User | any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const supabase = createClient();
