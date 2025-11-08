@@ -3,10 +3,11 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
+import type { User } from '@supabase/supabase-js';
 
 
 const Home = () => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | any>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const supabase = createClient();
