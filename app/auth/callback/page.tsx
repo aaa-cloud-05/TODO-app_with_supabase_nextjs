@@ -2,6 +2,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
+import { Spinner } from '@/components/ui/spinner'
 
 export default function AuthCallback() {
   const router = useRouter()
@@ -35,10 +36,7 @@ export default function AuthCallback() {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <div className="text-center">
-        <div className="mb-4 text-lg">認証中</div>
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600 mx-auto"></div>
-      </div>
+      <Spinner/>
     </div>
   )
 }

@@ -1,4 +1,6 @@
 'use client'
+import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -35,20 +37,17 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md space-y-8 rounded-lg border bg-white p-8 shadow-lg">
-        <button
-          onClick={handleSignIn}
-          disabled={loading}
-          className="w-full rounded-lg bg-white border-2 border-gray-300 px-4 py-3 font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 transition-colors"
-        >
-          {loading ? (
-            <span>Loading...</span>
-          ) : (
-            <h1>Google でログイン</h1>
-          )}
-        </button>
-      </div>
+    <div className="flex min-h-screen items-center justify-center text-background">
+      <Button
+        onClick={handleSignIn}
+        disabled={loading}
+      >
+        {loading ? (
+          <Spinner className=''/>
+        ) : (
+          <h1>Sign in with Google</h1>
+        )}
+      </Button>
     </div>
   )
 }

@@ -34,7 +34,10 @@ export async function GET() {
   if (userError || !user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
-  const { data, error } = await supabase.from("todos").select("*");
+  const { data, error } = await supabase
+    .from("todos")
+    .select("*")
+    .order('created_at', {ascending: true});
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -140,7 +143,7 @@ export async function DELETE(req: Request) {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // Route Handlersでは書き込みできない場合があるため無視
+
           }
         },
       },

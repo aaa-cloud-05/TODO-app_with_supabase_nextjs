@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import type { User } from '@supabase/supabase-js';
+import Todo from '../components/Todo';
+import { Spinner } from '@/components/ui/spinner';
 
 
 const Home = () => {
@@ -38,34 +40,19 @@ const Home = () => {
     return () => subscription.unsubscribe()
   }, [router, supabase])
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push('/login')
-  }
+  
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-lg">Loading...</div>
+        <Spinner className='text-primary'/>
       </div>
     )
   }
   if (!user) {
     return null;
   }
-
   return (
-    <div>
-      <div>
-        <h1>Welcome to my website</h1>
-      </div>
-      <button
-        onClick={handleSignOut}
-        className='border'
-      >
-        Sign out
-      </button>
-      <a href="/todo" className='underline text-blue-500'>todo-app</a>
-    </div>
+    <Todo/>
   )
 }
 
