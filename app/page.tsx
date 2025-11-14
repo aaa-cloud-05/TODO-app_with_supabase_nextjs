@@ -44,7 +44,7 @@ const Home = () => {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Spinner className='text-primary'/>
+        <Spinner />
       </div>
     )
   }

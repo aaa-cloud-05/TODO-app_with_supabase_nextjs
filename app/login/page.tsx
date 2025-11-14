@@ -43,7 +43,7 @@ const LoginPage = () => {
         disabled={loading}
       >
         {loading ? (
-          <Spinner className=''/>
+          <Spinner />
         ) : (
           <h1>Sign in with Google</h1>
         )}

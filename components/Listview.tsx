@@ -25,7 +25,7 @@ const Listview = ({ todos, onDelete, onToggle }: ListviewProps) => {
       {todos.map((todo: Todo) => (
         <li
           key={todo.id}
-          className='border shadow-sm mb-3 rounded-2xl hover:shadow-lg hover:scale-[1.01] transition-all duration-300 active:scale-[0.98] cursor-pointer'
+          className='border shadow-sm mb-3 rounded-2xl hover:shadow-lg hover:scale-[1.01] transition-all duration-300 active:scale-95 cursor-pointer'
           onClick={() => onToggle(todo.id, todo.done)}
         >
           <div className='flex items-center justify-between pl-4 pr-2 py-2'>

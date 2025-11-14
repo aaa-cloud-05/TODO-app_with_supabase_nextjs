@@ -11,7 +11,7 @@ Googleアカウントでのログインは必須ですが、どなたでも利�
 ## 目的
 実際のWebアプリケーションで必要とされる基本機能を実装することを目的とした。
 
-単なる動作確認ではなく、**フロントエンドからバックエンドまで一貫したデータフローの理解**を重視した。
+単なる動作だけではなく、**フロントエンドからバックエンドまで一貫したデータフローの理解**を重視した。
 
 学習した主な技術要素は以下の通り。
 
@@ -37,8 +37,11 @@ Googleアカウントでのログインは必須ですが、どなたでも利�
 そこで、本プロジェクトは、段階的に実践的な構成へと発展させた。
 
 * フロント内で完結するTODOアプリ
+
 * ローカルストレージによる永続化
+
 * Supabase DBによる永続化 (端末間で共有可能)
+
 * Supabase Auth / RLS によるユーザー単位でのデータ分離
 
 開発過程で、公式ドキュメントと生成AIを活用し、理解を深めながら実装した。
@@ -49,8 +52,9 @@ Googleアカウントでのログインは必須ですが、どなたでも利�
 | 言語など | バージョン  |
 | ------------ | ---------- |
 | React                | 19.1.0   |
-| Next.js(App Router)  | 15.5.6   |
+| Next.js / App Router  | 15.5.6   |
 | TypeScript          | 5.9.3    |
+| shadcn/ui | 3.5.0 |
 | Tailwind CSS        | 4.1.17   |
 | lucide-react         | 0.548.0  |
 
@@ -118,22 +122,22 @@ USING (auth.uid() = user_id);
 
 ```
 .
-└─ app
-    ├── api/todos/  -Supabaseと通信するAPIエンドポイント
-    ├── todos/page.tsx  -TODOアプリのページ
-    ├── login/page.tsx  -ログイン画面
+ └─ app
+    ├── api/todos/route.ts  -Supabaseと通信するRoute Handler
     ├── auth/callback.tsx  -Google認証コールバック
-    └── lib/supabase.ts  -Supabaseクライアントの作成
+    ├── globals.css -カラーテーマのcss定義
+    └── login/page.tsx  -ログイン画面
+
+ └─ components
+    ├── ui/ -shadcn/uiのコンポーネント
+    └── Todo.tsx - TODOリストのUIとfetcher
+
 ```
 
 ## 改善・追加予定
 * middlewareを使ったURL直打ち時のアクセス制御
 
-* shadcn/uiによるモダンUI化
-
 * 楽観的更新によるUX改善
-
-* 細かなコードの整理
 
 * TODOの拡張(タグ・並び替え)
 

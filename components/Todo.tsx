@@ -14,7 +14,7 @@ type Todo = { id: string; taskname: string; done: boolean};
 const Todo = () => {
   const [todos, setTodos] = useState<Todo[]>([])
   const [text, setText] = useState<string>("")
-  const url = "../api/todos"
+  const url = "/api/todos"
 
   // 一覧取得
   const fetchTodos = async () => {
@@ -37,40 +37,78 @@ const Todo = () => {
   const addTodo = async (e: React.FormEvent) => {
     e.preventDefault();
     if(!text.trim()) return;
+
+    // 仮のIDを設定して楽観的更新
+    const optimisticTodo: Todo= {
+      id: "temp-" + crypto.randomUUID(),
+      taskname: text,
+      done: false
+    };
+    setTodos(prev => [...prev, optimisticTodo]);
+    setText("");
+
     const res = await fetch(url, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({ text }),
     });
+
+    // ロールバック
+    if(!res.ok) {
+      setTodos(prev => prev.filter(t => t.id !== optimisticTodo.id));
+      return;
+    }
+
     const newTodo = await res.json();
-    setTodos([...todos,newTodo]);
-    setText("");
+
+    setTodos(prev =>
+      prev.map(t => t.id === optimisticTodo.id ? newTodo : t)
+    );
   };
 
   // 更新
   const toggleDone = async (id: string, done: boolean): Promise<void> => {
-    const trg = todos.find((t) => t.id === id);
-    if(!trg) return;
-    await fetch(url, {
+    const target = todos.find(t => t.id === id);
+    if (!target) return;
+
+    setTodos(prev => 
+      prev.map(t => t.id === id ? { ...t, done: !done } : t)
+    );
+
+    const res = await fetch(url, {
       method: "PUT",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ id, taskname: trg.taskname, done: !done})
+      body: JSON.stringify({
+        id,
+        taskname: target.taskname,
+        done: !done,
+      }),
     });
-    fetchTodos();
+    if (!res.ok) {
+      console.log("Update failed");
+      setTodos(prev =>
+        prev.map(t => t.id === id ? { ...t, done } : t)
+      );
+    }
   };
 
   // 削除
   const deleteTodo = async (id: string) => {
-    await fetch(url, {
+    const prev = todos;
+    setTodos(prev.filter(t => t.id != id));
+
+    const res = await fetch(url, {
       method: "DELETE",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({ id }),
     })
-    setTodos(todos.filter((t) => t.id !== id));
+
+    if (!res.ok) {
+      setTodos(prev);
+    }
   };
 
   const supabase = createClient();
-
   const handleSignOut = async () => {
     await supabase.auth.signOut()
   }
