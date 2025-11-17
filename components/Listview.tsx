@@ -2,7 +2,6 @@ import React from 'react'
 import { Trash } from 'lucide-react';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
-import { Input } from './ui/input';
 
 type Todo = {
   id: string;
@@ -17,9 +16,7 @@ type ListviewProps = {
 };
 
 const Listview = ({ todos, onDelete, onToggle }: ListviewProps) => {
-  if (!todos) {
-    return <p>No tasks yet.</p>
-  }
+  
   return (
     <ul>
       {todos.map((todo: Todo) => (
@@ -32,7 +29,10 @@ const Listview = ({ todos, onDelete, onToggle }: ListviewProps) => {
             <div className='flex items-center gap-3'>
               <Checkbox
                 checked={todo.done}
-                
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggle(todo.id, todo.done);
+                }}
               />
               <h4 className='scroll-m-20 text-lg font-medium tracking-tight text-primary'>{todo.taskname}</h4>
             </div>

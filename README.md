@@ -1,7 +1,9 @@
 # 認証付きフルスタックTODOアプリ
-Next.js / TypeScript / Supabase / Tailwind / Vercel Google認証に対応し、ユーザーごとに異なるTODOリストを管理できる**フルスタックWebアプリケーション**です。
+Next.js / TypeScript / Supabase / Tailwind / shadcn/ui / Vercel 
 
-フロントエンドからバックエンド、データベース、デプロイまで、Web開発の基本構成を一通り実装しました。
+Google認証に対応し、ユーザーごとに異なるTODOリストを保持できる**フルスタックWebアプリケーション**です。
+
+フロントエンドからバックエンド、データベース、デプロイまで、Web開発の基本構成を一通り実装した。
 
 ## デモ
 https://todo-app-with-supabase-nextjs-beta.vercel.app
@@ -15,9 +17,13 @@ Googleアカウントでのログインは必須ですが、どなたでも利�
 
 学習した主な技術要素は以下の通り。
 
-* Next.js App Routerの理解とページ遷移
+* Next.js / App Router を用いた fetcher / Route Handler の実装
 
-* CRUDの実装 (フロント / API / DB)
+* shadcn/ui を活用したモダンなUI構築とカラーテーマの実装
+
+* 楽観的更新の実装
+
+* CRUD操作 (frontend / API / DB) の実装 
 
 * Supabaseを用いたテーブル設計とPostgreSQLの基本操作
 
@@ -27,14 +33,14 @@ Googleアカウントでのログインは必須ですが、どなたでも利�
 
 * Vercelを用いた本番環境へのデプロイ
 
-**UIの作り込みよりも、フルスタックの基礎技術の理解に重点を置いた。**
+* (shadcn/uiを用いたモダンなUI構築)
 
 ## 背景
-多くのチュートリアルでのTODOアプリでは、フロント内で完結し、永続化や認証を備えていない。
+多くのチュートリアルでのTODOアプリでは、フロント内で完結し、データの永続化やユーザー認証機能を備えていない。
 
 そのため、実際のWebアプリケーションとは構成に乖離があると感じた。
 
-そこで、本プロジェクトは、段階的に実践的な構成へと発展させた。
+そこで、本プロジェクトは、以下のように段階的に実践的な構成へと発展させた。
 
 * フロント内で完結するTODOアプリ
 
@@ -60,6 +66,7 @@ Googleアカウントでのログインは必須ですが、どなたでも利�
 
 ### Backend
 * Supabase (PostgreSQL / Authentication / RLS)
+
 * Vercel (Hosting)
 
 ## 主な技術の選定理由
@@ -125,7 +132,7 @@ USING (auth.uid() = user_id);
  └─ app
     ├── api/todos/route.ts  -Supabaseと通信するRoute Handler
     ├── auth/callback.tsx  -Google認証コールバック
-    ├── globals.css -カラーテーマのcss定義
+    ├── globals.css -カラーテーマの定義
     └── login/page.tsx  -ログイン画面
 
  └─ components
@@ -134,12 +141,9 @@ USING (auth.uid() = user_id);
 
 ```
 
-## 改善・追加予定
-* middlewareを使ったURL直打ち時のアクセス制御
-
-* 楽観的更新によるUX改善
-
-* TODOの拡張(タグ・並び替え)
-
 ## 今後の展望
-今後は、このアプリを通して学んだ技術を、開発中のショートカットアプリに組込み、ユーザー単位でカスタムショートカットを作成できる形に発展させる。
+* このアプリを通して学んだ技術をもとに、より複雑なアーキテクチャのアプリケーションを開発する。
+
+* 動的ルーティングを中心とした、ネストしたディレクトリ構成でのAPI作成に取り組む。
+
+* BaaS以外の方法でのバックエンド開発に取り組む。

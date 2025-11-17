@@ -4,9 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import type { User } from '@supabase/supabase-js';
-import Todo from '../components/Todo';
 import { Spinner } from '@/components/ui/spinner';
-
 
 const Home = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -51,9 +49,7 @@ const Home = () => {
   if (!user) {
     return null;
   }
-  return (
-    <Todo/>
-  )
+  router.push('/home');
 }
 
 export default Home

@@ -15,7 +15,7 @@ const LoginPage = () => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        router.push('/')
+        router.push('/home')
       }
     }
     checkUser()
@@ -43,7 +43,7 @@ const LoginPage = () => {
         disabled={loading}
       >
         {loading ? (
-          <Spinner />
+          <Spinner className='text-accent-foreground'/>
         ) : (
           <h1>Sign in with Google</h1>
         )}

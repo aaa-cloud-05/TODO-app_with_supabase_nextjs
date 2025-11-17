@@ -1,18 +1,16 @@
 'use client'
 
+import Listview from '@/components/Listview';
+import TodoSkelton from '@/components/TodoSkelton';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import React, { useEffect, useState } from 'react'
-import Listview from './Listview';
-import { Input } from './ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { createClient } from '@/lib/supabase';
-import { Button } from './ui/button';
-import { User } from 'lucide-react';
-import { ModeToggle } from './Themebutton';
 
 type Todo = { id: string; taskname: string; done: boolean};
 
-const Todo = () => {
+const page = () => {
   const [todos, setTodos] = useState<Todo[]>([])
+  const [loading, setLoading] = useState(true);
   const [text, setText] = useState<string>("")
   const url = "/api/todos"
 
@@ -20,17 +18,12 @@ const Todo = () => {
   const fetchTodos = async () => {
     const res = await fetch(url);
     const data = await res.json();
-    if (!Array.isArray(data)) {
-      console.error("Unexpected data format:", data);
-      setTodos([]);
-      return;
-    }
-    setTodos(data);
+    setTodos(data || []);
   };
   
   // 起動時にfetch
   useEffect(() => {
-    fetchTodos();
+    fetchTodos().finally(() => setLoading(false));
   },[])
 
   // 追加
@@ -68,9 +61,6 @@ const Todo = () => {
 
   // 更新
   const toggleDone = async (id: string, done: boolean): Promise<void> => {
-    const target = todos.find(t => t.id === id);
-    if (!target) return;
-
     setTodos(prev => 
       prev.map(t => t.id === id ? { ...t, done: !done } : t)
     );
@@ -80,10 +70,10 @@ const Todo = () => {
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
         id,
-        taskname: target.taskname,
         done: !done,
       }),
     });
+    
     if (!res.ok) {
       console.log("Update failed");
       setTodos(prev =>
@@ -94,7 +84,7 @@ const Todo = () => {
 
   // 削除
   const deleteTodo = async (id: string) => {
-    const prev = todos;
+    const prev = [...todos];
     setTodos(prev.filter(t => t.id != id));
 
     const res = await fetch(url, {
@@ -108,28 +98,9 @@ const Todo = () => {
     }
   };
 
-  const supabase = createClient();
-  const handleSignOut = async () => {
-    await supabase.auth.signOut()
-  }
-
   return (
-    <div className='flex items-strart mt-16 justify-center min-h-screen '>
-      <div className='flex-col flex justify-center items-center w-[90%] h-[80vh] md:w-[600px] md:h-[500px]'>
-        <div className='flex flex-row gap-2 items-center justify-between w-full px-2 mb-2'>
-          <p className='scroll-m-20 text-xl text-shadow-sm font-normal tracking-tight first:mt-0 text-current'>
-            TODO-app
-          </p>
-          <div className="flex gap-1">
-            <ModeToggle/>
-            <Button
-              onClick={handleSignOut}
-              variant="ghost"
-            >
-              <User />
-            </Button>
-          </div>
-        </div>
+    <div className='flex items-strart mt-6 justify-center min-h-screen '>
+      <div className='flex-col flex justify-center items-center w-[90%] h-[90vh] md:w-[600px] md:h-[600px] '>
         <Card className='w-full h-full p-2 m-2'>
           <CardHeader>
             <div className='mt-4'>
@@ -145,18 +116,18 @@ const Todo = () => {
                 </form>
             </CardTitle>
             </div>
-            
           </CardHeader>
           <div>
-            <CardContent>
-              <Listview todos={todos} onDelete={deleteTodo} onToggle={toggleDone}/>
+            <CardContent className='overflow-y-auto max-h-[460px]'>
+              {loading ? (
+                <TodoSkelton/>
+              ) : <Listview todos={todos} onDelete={deleteTodo} onToggle={toggleDone}/>}
             </CardContent>
           </div>
         </Card>
       </div>
     </div>
-    
   )
 }
 
-export default Todo
+export default page
