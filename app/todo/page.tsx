@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react'
 
 type Todo = { id: string; taskname: string; done: boolean};
 
-const page = () => {
+const Page = () => {
   const [todos, setTodos] = useState<Todo[]>([])
   const [loading, setLoading] = useState(true);
   const [text, setText] = useState<string>("")
@@ -130,4 +130,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
