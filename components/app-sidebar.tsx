@@ -1,8 +1,9 @@
-import { CircleCheckBig, CircleUser, Home } from "lucide-react"
+import { CircleCheckBig, Home, MoveUpRight, User } from "lucide-react"
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -22,13 +23,10 @@ const topitems = [
     url: "/todo",
     icon: CircleCheckBig,
   },
-]
-
-const bottomitems = [
   {
     title: "Account",
     url: "/account",
-    icon: CircleUser,
+    icon: User,
   },
 ]
 
@@ -37,35 +35,33 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Applications</SidebarGroupLabel>
+          <SidebarGroupLabel>Tidy.io</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <div>
-                {topitems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <a href={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-                {bottomitems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <a href={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </div>
+              {topitems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild>
+            <a href="https://github.com/aaa-cloud-05/TODO-app_with_supabase_nextjs" target="_blank">
+              <MoveUpRight/>
+              <span>Dev Info</span>
+            </a>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarFooter>
     </Sidebar>
   )
 }

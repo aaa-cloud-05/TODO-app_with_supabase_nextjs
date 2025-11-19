@@ -1,39 +1,60 @@
 'use client'
 
-import React from 'react'
 import { Button } from './ui/button'
 import { ModeToggle } from './Themebutton'
-import { User } from 'lucide-react'
 import Link from 'next/link'
 import { SidebarTrigger } from './ui/sidebar'
 import { useRouter } from 'next/navigation'
+import { Check, UserRoundCheck, UserRoundMinus, X } from 'lucide-react'
+import { useSupabaseUser } from '@/app/hooks/useSupabaseUser'
+import { useState } from 'react'
 
 const Header = () => {
   const router = useRouter();
+  const user = useSupabaseUser()
 
   const goAccountSetting = () => {
     router.push('/account');
   }
 
+  const [ showBanner, setShowBanner ] = useState<Boolean>(true);
+
   return (
-    <div className='flex flex-row border-b shadow-xs items-center justify-between w-full px-3 py-3'>
-      <div className="flex items-center justify-between gap-2">
-        <SidebarTrigger/>
-        <Link className='scroll-m-20 text-xl text-shadow-sm font-normal tracking-tight text-current'
-          href={"/"}
-        >
-          TODO
-        </Link>
+    <div>
+      <div className='flex flex-row border-b shadow-xs items-center justify-between w-full px-3 py-2'>
+        <div className="flex items-center justify-between gap-2">
+          <SidebarTrigger/>
+          <Link className='scroll-m-20 text-xl text-shadow-sm font-normal tracking-wider text-current select-none'
+            href={"/"}
+          >
+            Tidy
+          </Link>
+        </div>
+        <div className="flex items-center gap-1">
+          <ModeToggle/>
+          <Button
+            onClick={goAccountSetting}
+            variant="ghost"
+          >
+            {user ? <UserRoundCheck /> : <UserRoundMinus/>}
+          </Button>
+        </div>
       </div>
-      <div className="flex items-center gap-1">
-        
-        <ModeToggle/>
-        <Button
-          onClick={goAccountSetting}
-          variant="ghost"
-        >
-          <User />
-        </Button>
+      <div>
+        {!user && showBanner ?
+        (
+          <div className='flex items-center justify-between relative gap-2 bg-accent rounded-b-md px-[0.3rem] py-[0.2rem] text-sm font-semibold shadow-2xs'>
+            <div className='ml-2 flex items-center gap-3'>
+              <Check size={18}/>
+              <div className='text-muted-foreground text-sm'>Your data is now stored locally. Sign in to sync it across devices.</div>
+            </div>
+            <button onClick={() => setShowBanner(false)} className='mr-2 flex cursor-pointer'>
+              <X size={18} />
+            </button>
+          </div>
+        )
+          : null
+        }
       </div>
     </div>
   )

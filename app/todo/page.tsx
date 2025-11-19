@@ -102,8 +102,8 @@ const Page = () => {
   };
 
   return (
-    <div className='flex items-strart mt-6 justify-center min-h-screen '>
-      <div className='flex-col flex justify-center items-center w-[90%] h-[90vh] md:w-[600px] md:h-[600px] '>
+    <div className='flex items-strart justify-center'>
+      <div className='flex-col flex justify-center items-center w-[90%] h-[90vh] md:w-[650px] md:h-[600px] '>
         <Card className='w-full h-full p-2 m-2'>
           <CardHeader>
             <div className='mt-4'>

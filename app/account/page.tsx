@@ -2,11 +2,13 @@
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { createClient } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 const AccountPage = () => {
   const [loading, setLoading] = useState(false)
   const supabase = createClient()
+  const router = useRouter()
 
   const handleSignIn = async () => {
     setLoading(true)
@@ -18,13 +20,14 @@ const AccountPage = () => {
     })
     
     if (error) {
-      alert(error.message)
+      console.log(error.message)
       setLoading(false)
     }
   }
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+    router.push('/')
   }
 
   return (
