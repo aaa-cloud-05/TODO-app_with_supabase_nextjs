@@ -11,23 +11,22 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleSession = async () => {
       try {
-        // URL からコードを取得してセッションと交換
         const { data: { session }, error } = await supabase.auth.getSession()
         
         if (error) {
           console.error('Session error:', error)
-          router.replace('/login')
+          router.replace('/account')
           return
         }
 
         if (session) {
           router.replace('/')
         } else {
-          router.replace('/login')
+          router.replace('/account')
         }
       } catch (error) {
         console.error('Callback error:', error)
-        router.replace('/login')
+        router.replace('/account')
       }
     }
 

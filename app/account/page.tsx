@@ -2,24 +2,11 @@
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { createClient } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-const LoginPage = () => {
+const AccountPage = () => {
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
   const supabase = createClient()
-
-  // すでにログインしている場合はホームへ
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        router.push('/home')
-      }
-    }
-    checkUser()
-  }, [router, supabase])
 
   const handleSignIn = async () => {
     setLoading(true)
@@ -36,8 +23,12 @@ const LoginPage = () => {
     }
   }
 
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center text-background">
+    <div className="flex flex-col gap-4 min-h-screen items-center justify-center text-background">
       <Button
         onClick={handleSignIn}
         disabled={loading}
@@ -48,8 +39,14 @@ const LoginPage = () => {
           <h1>Sign in with Google</h1>
         )}
       </Button>
+      <Button
+        onClick={handleSignOut}
+        disabled={loading}
+      >
+        <h1>Sign out</h1>
+      </Button>
     </div>
   )
 }
 
-export default LoginPage
+export default AccountPage

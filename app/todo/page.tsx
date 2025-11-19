@@ -17,8 +17,11 @@ const Page = () => {
   // 一覧取得
   const fetchTodos = async () => {
     const res = await fetch(url);
+    if (!res.ok) {
+      return [];
+    }
     const data = await res.json();
-    setTodos(data || []);
+    setTodos(data ?? []);
   };
   
   // 起動時にfetch

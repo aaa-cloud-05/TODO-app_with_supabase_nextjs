@@ -4,17 +4,15 @@ import React from 'react'
 import { Button } from './ui/button'
 import { ModeToggle } from './Themebutton'
 import { User } from 'lucide-react'
-import { createClient } from '@/lib/supabase'
 import Link from 'next/link'
 import { SidebarTrigger } from './ui/sidebar'
 import { useRouter } from 'next/navigation'
 
 const Header = () => {
-  const supabase = createClient();
   const router = useRouter();
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push('/login');
+
+  const goAccountSetting = () => {
+    router.push('/account');
   }
 
   return (
@@ -22,7 +20,7 @@ const Header = () => {
       <div className="flex items-center justify-between gap-2">
         <SidebarTrigger/>
         <Link className='scroll-m-20 text-xl text-shadow-sm font-normal tracking-tight text-current'
-          href={"/home"}
+          href={"/"}
         >
           TODO
         </Link>
@@ -31,7 +29,7 @@ const Header = () => {
         
         <ModeToggle/>
         <Button
-          onClick={handleSignOut}
+          onClick={goAccountSetting}
           variant="ghost"
         >
           <User />

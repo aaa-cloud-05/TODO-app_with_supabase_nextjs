@@ -17,25 +17,9 @@ const Home = () => {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
       setLoading(false)
-      
-      if (!user) {
-        router.push('/login')
-      }
     }
 
     checkUser()
-
-    // 認証状態の変化を監視
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null)
-        if (!session?.user) {
-          router.push('/login')
-        }
-      }
-    )
-
-    return () => subscription.unsubscribe()
   }, [router, supabase])
 
   
@@ -46,10 +30,12 @@ const Home = () => {
       </div>
     )
   }
-  if (!user) {
-    return null;
-  }
-  router.push('/home');
+  return (
+    <div className='flex flex-col mt-10'>
+      <h1 className='flex justify-center text-muted-foreground text-sm'>This is home section</h1>
+      {!user ? <p className='flex justify-center text-muted-foreground text-sm'>If you want to save data, please sign up.</p> : null}
+    </div>
+  )
 }
 
 export default Home
