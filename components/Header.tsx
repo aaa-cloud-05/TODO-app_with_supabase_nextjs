@@ -17,7 +17,7 @@ const Header = () => {
     router.push('/account');
   }
 
-  const [ showBanner, setShowBanner ] = useState<Boolean>(true);
+  const [ showBanner, setShowBanner ] = useState<boolean>(true);
 
   return (
     <div>
