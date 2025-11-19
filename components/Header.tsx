@@ -24,7 +24,7 @@ const Header = () => {
         <Link className='scroll-m-20 text-xl text-shadow-sm font-normal tracking-tight text-current'
           href={"/home"}
         >
-          ONE
+          TODO
         </Link>
       </div>
       <div className="flex items-center gap-1">

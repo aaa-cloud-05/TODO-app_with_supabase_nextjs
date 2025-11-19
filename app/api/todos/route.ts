@@ -69,7 +69,7 @@ export async function POST(req: Request) {
   const body = await req.json();
   const { data, error: insertError } = await supabase
     .from("todos")
-    .insert([{ taskname: body.text, user_id: user.id }])
+    .insert([{ taskname: body.text, user_id: user ? user.id : null }])
     .select()
     .single();
 
