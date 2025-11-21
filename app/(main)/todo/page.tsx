@@ -108,7 +108,7 @@ const Page = () => {
   return (
     <div className='flex items-strart justify-center'>
       <div className='flex-col flex justify-center items-center w-[90%] h-[90vh] md:w-[650px] md:h-[600px] '>
-        <Card className='w-full h-full p-2 m-2'>
+        <Card className='w-full h-full p-2 m-2 border-none'>
           <CardHeader>
             <div className='mt-4'>
               <CardTitle className='flex flex-row items-end justify-between'>

@@ -23,11 +23,11 @@ const topitems = [
     url: "/todo",
     icon: CircleCheckBig,
   },
-  {
-    title: "Account",
-    url: "/account",
-    icon: User,
-  },
+  // {
+  //   title: "Account",
+  //   url: "/account",
+  //   icon: User,
+  // },
 ]
 
 export function AppSidebar() {
