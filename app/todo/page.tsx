@@ -101,22 +101,31 @@ const Page = () => {
     }
   };
 
+  const completionCount = (): number => {
+    return todos.filter(todo => todo.done).length
+  }
+
   return (
     <div className='flex items-strart justify-center'>
       <div className='flex-col flex justify-center items-center w-[90%] h-[90vh] md:w-[650px] md:h-[600px] '>
         <Card className='w-full h-full p-2 m-2'>
           <CardHeader>
             <div className='mt-4'>
-              <CardTitle>
-                <form onSubmit={addTodo} >
-                  <Input
-                    type='text'
-                    placeholder='Enter...'
-                    value={text}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setText(e.target.value)}
-                    autoFocus={true}
-                  />
-                </form>
+              <CardTitle className='flex flex-row items-end justify-between'>
+                <div className='w-full'>
+                  <form onSubmit={addTodo} >
+                    <Input
+                      type='text'
+                      placeholder='Enter...'
+                      value={text}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setText(e.target.value)}
+                      autoFocus={true}
+                    />
+                  </form>
+                </div>
+                <div className='mx-4'>
+                  <h1 className='text-muted-foreground mb-1 text-sm italic'>{completionCount()}/{todos.length}</h1>
+                </div>
             </CardTitle>
             </div>
           </CardHeader>

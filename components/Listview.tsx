@@ -16,6 +16,7 @@ type ListviewProps = {
 };
 
 const Listview = ({ todos, onDelete, onToggle }: ListviewProps) => {
+
   if(todos.length===0){
     return (
       <p className='flex justify-center text-muted-foreground text-sm italic select-none'>No tasks here...</p>
@@ -23,7 +24,6 @@ const Listview = ({ todos, onDelete, onToggle }: ListviewProps) => {
   }
   return (
     <div>
-      <h1>{todos.length}</h1>
       <ul>
         {todos.map((todo: Todo) => (
           <li
