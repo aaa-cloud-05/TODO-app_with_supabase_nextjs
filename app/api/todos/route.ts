@@ -35,8 +35,8 @@ async function getAuthenticationUser(supabase: SupabaseClient) {
     error: userError,
   } = await supabase.auth.getUser();
 
-  if (userError || !user) {
-    return { user: null, error: NextResponse.json({ error: "Not authenticated" }, { status: 401 }) };
+  if (userError) {
+    return { user: null, error: NextResponse.json({ error: "Authentication error" }, { status: 401 }) };
   }
 
   return { user, error: null };

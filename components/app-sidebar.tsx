@@ -1,4 +1,4 @@
-import { CircleCheckBig, Home, MoveUpRight, User } from "lucide-react"
+import { CircleCheckBig, Home, MoveUpRight } from "lucide-react"
 
 import {
   Sidebar,

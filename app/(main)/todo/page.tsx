@@ -4,6 +4,7 @@ import Listview from '@/components/Listview';
 import TodoSkelton from '@/components/TodoSkelton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { useSupabaseUser } from '@/hooks/useSupabaseUser';
 import React, { useEffect, useState } from 'react'
 
 type Todo = { id: string; taskname: string; done: boolean};
@@ -14,25 +15,68 @@ const Page = () => {
   const [text, setText] = useState<string>("")
   const url = "/api/todos"
 
+  const user = useSupabaseUser();
+
+  const LOCAL_KEY = "local_todos";
+
+  // 2025/11/23
+  // 未ログインユーザー　＝　アカウントの有無にかかわらずログインしていないユーザー
+  // 
+  // これまでの構成：
+  // ログインユーザーのみに対しての設計
+  // CRUD操作で必ずAPIを叩く
+  // 
+  // 新たな構成(構想)：
+  // 1.
+  // ログインユーザー = APIを通した今まで通りの設計
+  // 未ログインユーザー = ローカルストレージにTODOを保存, APIを叩かない
+  // => ログイン時にローカルストレージの内容をDBに追加
+  // 
+  // 2.
+  // ログインユーザー、未ログインユーザーともに、ページアクセス時にlocalStorageを参照する
+  // => 初回アクセス時に発生するfetchによる遅延を減らす
+
+
   // 一覧取得
   const fetchTodos = async () => {
+    if(!user) {
+      // 未ログインユーザーの場合、localStorageから取得
+      const local = JSON.parse(localStorage.getItem(LOCAL_KEY) ?? "[]")
+      setTodos(local);
+      return;
+    }
+
     const res = await fetch(url);
     if (!res.ok) {
-      return [];
+      setTodos([]);
     }
+    
     const data = await res.json();
-    setTodos(data ?? []);
+    setTodos(data);
   };
   
-  // 起動時にfetch
   useEffect(() => {
     fetchTodos().finally(() => setLoading(false));
-  },[])
+  },[user])
 
   // 追加
   const addTodo = async (e: React.FormEvent) => {
     e.preventDefault();
     if(!text.trim()) return;
+
+    setText("");
+
+    if (!user) {
+      const newTodo: Todo = {
+        id: crypto.randomUUID(),
+        taskname: text,
+        done: false
+      }
+      const updated = [...todos,newTodo];
+      setTodos(updated);
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(updated));
+      return;
+    }
 
     // 仮のIDを設定して楽観的更新
     const optimisticTodo: Todo= {
@@ -41,7 +85,6 @@ const Page = () => {
       done: false
     };
     setTodos(prev => [...prev, optimisticTodo]);
-    setText("");
 
     const res = await fetch(url, {
       method: "POST",
@@ -68,6 +111,13 @@ const Page = () => {
       prev.map(t => t.id === id ? { ...t, done: !done } : t)
     );
 
+    if (!user) {
+      const local = JSON.parse(localStorage.getItem(LOCAL_KEY) ?? "[]")
+      const updated = local.map((t: Todo) => t.id === id ? {...t, done: !done } : t)
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(updated));
+      return;
+    }
+
     const res = await fetch(url, {
       method: "PUT",
       headers: {"Content-Type": "application/json"},
@@ -89,6 +139,13 @@ const Page = () => {
   const deleteTodo = async (id: string) => {
     const prev = [...todos];
     setTodos(prev.filter(t => t.id != id));
+
+    if (!user) {
+      const local = JSON.parse(localStorage.getItem(LOCAL_KEY) ?? "[]")
+      const updated = local.filter((t: Todo) => t.id !== id)
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(updated));
+      return;
+    }
 
     const res = await fetch(url, {
       method: "DELETE",
