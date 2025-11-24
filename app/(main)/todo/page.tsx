@@ -1,7 +1,7 @@
 'use client'
 
 import Listview from '@/components/Listview';
-import TodoSkelton from '@/components/TodoSkelton';
+import TodoSkeleton from '@/components/TodoSkeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useSupabaseUser } from '@/hooks/useSupabaseUser';
@@ -50,7 +50,7 @@ const Page = () => {
     if (!res.ok) {
       setTodos([]);
     }
-    
+
     const data = await res.json();
     setTodos(data);
   };
@@ -163,7 +163,7 @@ const Page = () => {
   }
 
   return (
-    <div className='flex items-strart justify-center'>
+    <div className='flex items-start justify-center'>
       <div className='flex-col flex justify-center items-center w-[90%] h-[90vh] md:w-[650px] md:h-[600px] '>
         <Card className='w-full h-full p-2 m-2 border-none'>
           <CardHeader>
@@ -189,7 +189,7 @@ const Page = () => {
           <div>
             <CardContent className='overflow-y-auto max-h-[460px]'>
               {loading ? (
-                <TodoSkelton/>
+                <TodoSkeleton/>
               ) : <Listview todos={todos} onDelete={deleteTodo} onToggle={toggleDone}/>}
             </CardContent>
           </div>
