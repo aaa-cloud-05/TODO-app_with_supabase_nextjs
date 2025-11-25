@@ -11,11 +11,10 @@ type Todo = { id: string; taskname: string; done: boolean};
 
 const Page = () => {
   const [todos, setTodos] = useState<Todo[]>([])
-  const [loading, setLoading] = useState(true);
   const [text, setText] = useState<string>("")
   const url = "/api/todos"
 
-  const user = useSupabaseUser();
+  const { user, authLoading } = useSupabaseUser();
 
   const LOCAL_KEY = "local_todos";
 
@@ -56,7 +55,8 @@ const Page = () => {
   };
   
   useEffect(() => {
-    fetchTodos().finally(() => setLoading(false));
+    // fetchTodos().finally(() => setLoading(false));
+    fetchTodos();
   },[user])
 
   // 追加
@@ -188,7 +188,7 @@ const Page = () => {
           </CardHeader>
           <div>
             <CardContent className='overflow-y-auto max-h-[460px]'>
-              {loading ? (
+              {authLoading ? (
                 <TodoSkeleton/>
               ) : <Listview todos={todos} onDelete={deleteTodo} onToggle={toggleDone}/>}
             </CardContent>

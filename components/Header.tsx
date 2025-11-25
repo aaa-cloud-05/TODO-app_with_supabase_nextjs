@@ -12,7 +12,7 @@ import { useState } from 'react'
 const Header = () => {
   const router = useRouter();
   const pathname = usePathname()
-  const user = useSupabaseUser()
+  const { user } = useSupabaseUser()
 
   const goAccountSetting = () => {
     router.push('/account');
