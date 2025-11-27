@@ -9,14 +9,15 @@ import React, { useEffect, useState } from 'react'
 
 type Todo = { id: string; taskname: string; done: boolean};
 
+const LOCAL_KEY = "local_todos";
+const url = "/api/todos"
+
 const Page = () => {
   const [todos, setTodos] = useState<Todo[]>([])
   const [text, setText] = useState<string>("")
-  const url = "/api/todos"
 
-  const { user, authLoading } = useSupabaseUser();
+  const { user, authLoading, merging } = useSupabaseUser();
 
-  const LOCAL_KEY = "local_todos";
 
   // 2025/11/23
   // 未ログインユーザー　＝　アカウントの有無にかかわらずログインしていないユーザー
@@ -46,18 +47,15 @@ const Page = () => {
     }
 
     const res = await fetch(url);
-    if (!res.ok) {
-      setTodos([]);
-    }
 
     const data = await res.json();
     setTodos(data);
   };
   
   useEffect(() => {
-    // fetchTodos().finally(() => setLoading(false));
+    if (authLoading || merging) return;
     fetchTodos();
-  },[user])
+  },[authLoading, merging, user])
 
   // 追加
   const addTodo = async (e: React.FormEvent) => {
@@ -188,7 +186,7 @@ const Page = () => {
           </CardHeader>
           <div>
             <CardContent className='overflow-y-auto max-h-[460px]'>
-              {authLoading ? (
+              {authLoading || merging ? (
                 <TodoSkeleton/>
               ) : <Listview todos={todos} onDelete={deleteTodo} onToggle={toggleDone}/>}
             </CardContent>
