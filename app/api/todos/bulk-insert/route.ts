@@ -17,8 +17,8 @@ async function createSupabaseClient() {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
             );
-          } catch {
-
+          } catch (error) {
+            console.error("Cookie set error:", error);
           }
         },
       },
@@ -29,6 +29,7 @@ async function createSupabaseClient() {
 export async function POST(req: Request) {
   const supabase = await createSupabaseClient();
 
+  // ユーザー認証
   const {
     data: { user },
     error,
@@ -38,11 +39,23 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
+  // データ取得
   const { todos } = await req.json();
+  if (!todos || !Array.isArray(todos)) {
+    return NextResponse.json({ error: "Invalid data" }, { status: 400 });
+  }
 
+  // データ整形 (ローカルのidを削除し、DB側で自動生成させる)
+  const cleanTodos = todos.map((t: any) => ({
+    taskname: t.taskname,
+    done: t.done,
+    user_id: user.id,
+  }));
+
+  // 一括インサート
   const { error: insertError } = await supabase
     .from("todos")
-    .insert(todos);
+    .insert(cleanTodos);
 
   if (insertError) {
     return NextResponse.json({ error: insertError.message }, { status: 500 });

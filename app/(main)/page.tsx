@@ -20,7 +20,7 @@ const Home = () => {
     }
 
     checkUser()
-  }, [router, supabase])
+  }, [router])
 
   
   if (loading) {
