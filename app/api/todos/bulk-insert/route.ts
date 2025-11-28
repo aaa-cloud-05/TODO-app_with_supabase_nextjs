@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+type IncomingTodo = {
+  taskname: string;
+  done: boolean;
+};
+
 async function createSupabaseClient() {
   const cookieStore = await cookies();
   return createServerClient(
@@ -46,7 +51,7 @@ export async function POST(req: Request) {
   }
 
   // データ整形 (ローカルのidを削除し、DB側で自動生成させる)
-  const cleanTodos = todos.map((t: any) => ({
+  const cleanTodos = todos.map((t: IncomingTodo) => ({
     taskname: t.taskname,
     done: t.done,
     user_id: user.id,
