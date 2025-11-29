@@ -1,29 +1,12 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase';
-import type { User } from '@supabase/supabase-js';
 import { Spinner } from '@/components/ui/spinner';
+import { useSupabaseUser } from '@/hooks/useSupabaseUser';
 
 const Home = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
-  const supabase = createClient();
-
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-      setLoading(false)
-    }
-
-    checkUser()
-  }, [router])
-
+  const { user, authLoading } = useSupabaseUser()
   
-  if (loading) {
+  if (authLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Spinner />
