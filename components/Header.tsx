@@ -6,13 +6,13 @@ import Link from 'next/link'
 import { SidebarTrigger } from './ui/sidebar'
 import { usePathname, useRouter } from 'next/navigation'
 import { Check, UserRoundCheck, UserRoundMinus, X } from 'lucide-react'
-import { useSupabaseUser } from '@/hooks/useSupabaseUser'
 import { useState } from 'react'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 const Header = () => {
   const router = useRouter();
   const pathname = usePathname()
-  const { user } = useSupabaseUser()
+  const user = useAuthStore((state) => state.user);
 
   const goAccountSetting = () => {
     router.push('/account');

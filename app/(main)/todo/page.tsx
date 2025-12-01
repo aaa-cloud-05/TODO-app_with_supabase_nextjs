@@ -4,7 +4,7 @@ import Listview from '@/components/Listview';
 import TodoSkeleton from '@/components/TodoSkeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { useSupabaseUser } from '@/hooks/useSupabaseUser';
+import { useAuthStore } from '@/stores/useAuthStore';
 import React, { useEffect, useState } from 'react'
 
 type Todo = { id: string; taskname: string; done: boolean};
@@ -16,7 +16,9 @@ const Page = () => {
   const [todos, setTodos] = useState<Todo[]>([])
   const [text, setText] = useState<string>("")
 
-  const { user, authLoading, merging } = useSupabaseUser();
+  const user = useAuthStore((state) => state.user);
+  const authLoading = useAuthStore((state) => state.authLoading);
+  const merging = useAuthStore((state) => state.merging);
 
   // 一覧取得
   const fetchTodos = async () => {

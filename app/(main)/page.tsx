@@ -1,10 +1,11 @@
 'use client'
 
 import { Spinner } from '@/components/ui/spinner';
-import { useSupabaseUser } from '@/hooks/useSupabaseUser';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 const Home = () => {
-  const { user, authLoading } = useSupabaseUser()
+  const user = useAuthStore((state) => state.user);
+  const authLoading = useAuthStore((state) => state.authLoading);
   
   if (authLoading) {
     return (

@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import AuthInitializer from "@/components/AuthInitializer";
 
 export default function MainLayout({
   children,
@@ -11,6 +12,7 @@ export default function MainLayout({
     <SidebarProvider>
       <AppSidebar />
       <main className="flex-1">
+        <AuthInitializer/>
         <Header />
         {children}
       </main>
