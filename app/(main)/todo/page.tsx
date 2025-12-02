@@ -13,8 +13,9 @@ const LOCAL_KEY = "local_todos";
 const url = "/api/todos"
 
 const Page = () => {
-  const [todos, setTodos] = useState<Todo[]>([])
-  const [text, setText] = useState<string>("")
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [text, setText] = useState<string>("");
+  const [fetching, setFetching] = useState(false);
 
   const user = useAuthStore((state) => state.user);
   const authLoading = useAuthStore((state) => state.authLoading);
@@ -22,23 +23,26 @@ const Page = () => {
 
   // 一覧取得
   const fetchTodos = async () => {
+    if (fetching) return;
+    setFetching(true);
+
     if(!user) {
       // 未ログインユーザーの場合、localStorageから取得
       const local = JSON.parse(localStorage.getItem(LOCAL_KEY) ?? "[]")
       setTodos(local);
+      setFetching(false);
       return;
     }
-
     const res = await fetch(url);
-
     const data = await res.json();
     setTodos(data);
+    setFetching(false);
   };
   
   useEffect(() => {
     if (authLoading || merging) return;
     fetchTodos();
-  },[authLoading, merging, user])
+  },[authLoading, merging])
 
   // 追加
   const addTodo = async (e: React.FormEvent) => {
@@ -169,7 +173,7 @@ const Page = () => {
           </CardHeader>
           <div>
             <CardContent className='overflow-y-auto max-h-[460px]'>
-              {authLoading || merging ? (
+              {fetching || authLoading || merging ? (
                 <TodoSkeleton/>
               ) : <Listview todos={todos} onDelete={deleteTodo} onToggle={toggleDone}/>}
             </CardContent>
