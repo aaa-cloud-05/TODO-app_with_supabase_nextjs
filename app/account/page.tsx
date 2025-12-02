@@ -48,7 +48,7 @@ const AccountPage = () => {
         <CardContent>
           <div className='flex items-center justify-center gap-1'>
             <Link className='text-primary text-sm' href={'/'}>Tidy</Link>
-            <p className='text-muted-foreground text-sm'>- task management that feels light and natural.</p>
+            <p className='text-muted-foreground text-sm'>- TODO app that feels natural.</p>
           </div>
         </CardContent>
         <CardFooter className='flex flex-col gap-4 pb-4 pt-6'>
