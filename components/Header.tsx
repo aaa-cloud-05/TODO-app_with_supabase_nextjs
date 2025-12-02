@@ -5,7 +5,7 @@ import { ModeToggle } from './Themebutton'
 import Link from 'next/link'
 import { SidebarTrigger } from './ui/sidebar'
 import { usePathname, useRouter } from 'next/navigation'
-import { Check, UserRoundCheck, UserRoundMinus, X } from 'lucide-react'
+import { Check, UserRound, UserRoundCheck, UserRoundMinus, X } from 'lucide-react'
 import { useState } from 'react'
 import { useAuthStore } from '@/stores/useAuthStore'
 
@@ -13,6 +13,7 @@ const Header = () => {
   const router = useRouter();
   const pathname = usePathname()
   const user = useAuthStore((state) => state.user);
+  const authLoading = useAuthStore((state) => state.authLoading);
 
   const goAccountSetting = () => {
     router.push('/account');
@@ -37,12 +38,12 @@ const Header = () => {
             onClick={goAccountSetting}
             variant="ghost"
           >
-            {user ? <UserRoundCheck /> : <UserRoundMinus/>}
+            {authLoading ? <UserRound /> : (user ? <UserRoundCheck /> : <UserRoundMinus/>)}
           </Button>
         </div>
       </div>
       <div>
-        {!user && showBanner && pathname === "/todo" ?
+        {!authLoading && !user && showBanner && pathname === "/todo" ?
         (
           <div className='flex items-center justify-between gap-2 bg-accent rounded-b-md px-[0.3rem] py-[0.2rem] text-sm font-semibold shadow-2xs'>
             <div className='ml-2 flex items-center gap-3'>

@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
 import { createClient } from '@/lib/supabase'
+import { useAuthStore } from '@/stores/useAuthStore'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -11,6 +12,7 @@ const AccountPage = () => {
   const [loading, setLoading] = useState(false)
   const supabase = createClient()
   const router = useRouter()
+  const merging = useAuthStore((state) => state.merging);
 
   const handleSignIn = async () => {
     setLoading(true)
@@ -51,7 +53,7 @@ const AccountPage = () => {
         </CardContent>
         <CardFooter className='flex flex-col gap-4 pb-4 pt-6'>
           <Button onClick={handleSignIn} className='w-full cursor-pointer'>
-            {loading ? <Spinner className='text-current'/> : "Sign up with Google"}
+            {!merging && loading ? <Spinner className='text-current'/> : "Sign up with Google"}
           </Button>
           <button className='text-muted-foreground underline hover:text-primary transition text-sm cursor-pointer' onClick={handleSignOut}>
             Sign out
