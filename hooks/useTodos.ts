@@ -19,17 +19,21 @@ const useTodos = () => {
     if (fetching) return;
     setFetching(true);
 
-    if(!user) {
-      // 未ログインユーザーの場合、localStorageから取得
-      const local = JSON.parse(localStorage.getItem(LOCAL_KEY) ?? "[]")
-      setTodos(local);
+    try {
+      if(!user) {
+        // 未ログインユーザーの場合、localStorageから取得
+        const local = JSON.parse(localStorage.getItem(LOCAL_KEY) ?? "[]")
+        setTodos(local);
+        return;
+      }
+      const res = await fetch(url);
+      const data = await res.json();
+      setTodos(data);
+    } catch (e) {
+      console.error("fetchTodos failed", e);
+    } finally {
       setFetching(false);
-      return;
     }
-    const res = await fetch(url);
-    const data = await res.json();
-    setTodos(data);
-    setFetching(false);
   };
   
   useEffect(() => {
@@ -59,23 +63,21 @@ const useTodos = () => {
     };
     setTodos(prev => [...prev, optimisticTodo]);
 
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ taskname }),
-    });
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ taskname }),
+      });
 
-    // ロールバック
-    if(!res.ok) {
+      if (!res.ok) throw new Error("Add failed");
+      const newTodo = await res.json();
+      setTodos(prev =>
+        prev.map(t => t.id === optimisticTodo.id ? newTodo : t)
+      );
+    } catch {
       setTodos(prev => prev.filter(t => t.id !== optimisticTodo.id));
-      return;
     }
-
-    const newTodo = await res.json();
-
-    setTodos(prev =>
-      prev.map(t => t.id === optimisticTodo.id ? newTodo : t)
-    );
   };
 
   // 更新
@@ -91,17 +93,18 @@ const useTodos = () => {
       return;
     }
 
-    const res = await fetch(url, {
-      method: "PUT",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        id,
-        done: !done,
-      }),
-    });
-    
-    if (!res.ok) {
-      console.log("Update failed");
+    try {
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          id,
+          done: !done,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Update failed");
+    } catch {
       setTodos(prev =>
         prev.map(t => t.id === id ? { ...t, done } : t)
       );
@@ -120,13 +123,14 @@ const useTodos = () => {
       return;
     }
 
-    const res = await fetch(url, {
-      method: "DELETE",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ id }),
-    })
-
-    if (!res.ok) {
+    try {
+      const res = await fetch(url, {
+        method: "DELETE",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ id }),
+      })
+      if (!res.ok) throw new Error("Delete failed");
+    } catch {
       setTodos(prev);
     }
   };
