@@ -1,80 +1,99 @@
-# 認証付きフルスタックTODOアプリ
-Next.js / TypeScript / Supabase / Tailwind / shadcn/ui / Vercel 
+# Tidy - 認証付きフルスタックTodoアプリ
+React / Next.js (App Router) / TypeScript / Zustand / Tailwind CSS / shadcn/ui / Supabase (Postgres + Auth + RLS) / Vercel 
 
-Google認証に対応し、ユーザーごとに異なるTODOリストを保持できる**フルスタックWebアプリケーション**です。
+## 概要
 
-フロントエンドからバックエンド、データベース、デプロイまで、Web開発の基本構成を一通り実装した。
+Tidyは、モダンなフルスタック開発のベストプラクティスを学ぶために作った実践的なTODOアプリケーションです。
+
+単なるCRUDではなく、認証、永続化、状態管理、UX最適化(楽観的更新やスケルトン表示など) を取り入れ、ローカルでのオフラインライクな利用と、ログイン後のDB同期の両方を提供します。
+
+* Google OAuth に対応したSupabase認証
+
+* ユーザーごとのデータ分離 (Row Level Security)
+
+* 未ログイン時はlocalStorage、ログイン後はSupabase DBに同期
+
+* Optimistic UI / Skeleton / 多重API呼び出し防止などのUX最適化
+
+* Next.js App Router / Route Handlers を用いたAPI層
 
 ## デモ
 https://todo-app-with-supabase-nextjs-beta.vercel.app
 
-Googleアカウントでのログインは必須ですが、どなたでも利用できます。
+Googleアカウントが無くても操作が可能です(未ログイン時はlocalStorageに保存されます)。
 
-## 目的
-実際のWebアプリケーションで必要とされる基本機能を実装することを目的とした。
+<!-- ### スクリーンショット -->
 
-単なる動作だけではなく、**フロントエンドからバックエンドまで一貫したデータフローの理解**を重視した。
+## 特徴
 
-主な技術は以下の通り。
+* Next.js App Router を用いたクライアント/サーバー間の分離
 
-* Next.js / App Router を用いた fetcher / Route Handler の実装
+* shadcn/ui を活用したモダンなUI
 
-* shadcn/ui を活用したモダンなUI構築とカラーテーマの実装
+* カラーテーマ対応
 
-* 楽観的更新の実装
+* レスポンシブデザイン
 
-* CRUD操作 (frontend / API / DB) の実装 
+* Optimistic UI
 
-* Supabaseを用いたテーブル設計とPostgreSQLの基本操作
+* APIの多重呼び出しを防ぐローディング制御
 
-* Google OAuthを用いたユーザー認証 (Supabase Auth)
+* 未ログイン時のlocalStorage保存と、ログイン時の一括マージ(/api/todos/bulk-insert)
 
-* Row Level Security (RLS) によるユーザー単位のデータ分離
+* Supabase Auth + RLSによるユーザーごとのDB分離
 
-* Vercelを用いた本番環境へのデプロイ
+* Vercelによるデプロイ
 
-* shadcn/uiを用いたモダンなUI構築
+## 動機
+実務で求められる Web アプリケーションの構成（認証・永続化・API・DB・デプロイ）を、一通り実装できるようになることを目的とした。
 
-## 背景
-多くのチュートリアルでのTODOアプリでは、フロント内で完結し、データの永続化やユーザー認証機能を備えていない。
+フロント,バックエンド,DB まで一貫したデータフローの理解を重視した。
 
-そのため、実際のWebアプリケーションとは構成に乖離があると感じた。
+また、一般的なチュートリアルの Todo アプリはクライアント完結であり、
+認証・永続化・RLS・端末間同期など、実務に必要な要素が欠けているため、段階的に以下のステップで現実的な構成へ拡張した。
 
-そこで、本プロジェクトは、以下のように段階的に実践的な構成へと発展させた。
+1. フロントのみで完結するTODOアプリ
 
-* フロント内で完結するTODOアプリ
+2. localStorageによる永続化
 
-* ローカルストレージによる永続化
+3. Supabaseによる永続化 (端末間共有)
 
-* Supabase DBによる永続化 (端末間で共有可能)
+4. Supabase Auth + RLS によるユーザー単位の分離
 
-* Supabase Auth / RLS によるユーザー単位でのデータ分離
+5. 未ログイン時でもアプリケーションを使用できるようにし、ログイン後にDBと同期
 
-開発過程で、公式ドキュメントと生成AIを活用し、理解を深めながら実装した。
+動くだけのものではなく、実際にリリースできる構成と意図のある設計を意識したプロダクトを目指した。
 
 ## 技術スタック
 ### Frontend
 
-| 言語など | バージョン  |
+| 技術 | バージョン |
 | ------------ | ---------- |
 | React                | 19.1.0   |
 | Next.js / App Router  | 15.5.6   |
 | TypeScript          | 5.9.3    |
+| Zustand | 11.5.2 |
 | shadcn/ui | 3.5.0 |
 | Tailwind CSS        | 4.1.17   |
 | lucide-react         | 0.548.0  |
 
-### Backend
-* Supabase (PostgreSQL / Authentication / RLS)
+### Backend / Hosting
+* Supabase (Postgres / Auth / RLS)
 
-* Vercel (Hosting)
+* Vercel (Hosting / Deploy)
 
 ## 主な技術の選定理由
 * **Next.js**
-API Routesでフロントエンドとサーバーを同一プロジェクト内で扱えるため。
+API Routes と App Router により、フロントとサーバーを同一プロジェクトで構築でき、フルスタック全体の流れを理解しやすいため。
+
+* **shadcn/ui**
+UI構築に時間を使いすぎず、必要なデザインとアクセシビリティを実現できるため。
+
+* **Zustand**
+認証状態をグローバルで一元管理し、コンポーネント間での多重呼び出しや不整合を防ぐため。
 
 * **Supabase**
-DB・Authが統合された環境で、学習コストを抑えてフルスタック開発の全体像を掴めるため。
+DB + Auth + RLS が統合された環境で、学習コストを抑えてフルスタック開発の全体像を掴めるため。
 
 * **Vercel**
 Next.jsと親和性が高く、デプロイが簡単に行えるため。完成系を提供しやすい。
@@ -82,26 +101,105 @@ Next.jsと親和性が高く、デプロイが簡単に行えるため。完成�
 
 ## アーキテクチャ
 ```
-[Client (Next.js)] 
-   ↓ fetch
-[Next.js API Route (/api/todos)]
+┌─────────────────────────────────────────────────┐
+│  Client (Next.js App Router)                    │
+│  ├─ React Components (shadcn/ui)                │
+│  ├─ Zustand Global State                        │
+│  └─ Optimistic UI                               │
+└──────────────┬──────────────────────────────────┘
+               │ HTTP Fetch
+               ↓
+┌─────────────────────────────────────────────────┐
+│  Next.js API Routes (Server Actions)            │
+│  ├─ /api/todos (CRUD)                           │
+│  └─ /auth/callback (OAuth)                      │
+└──────────────┬──────────────────────────────────┘
+               │ Supabase
+               ↓
+┌─────────────────────────────────────────────────┐
+│  Supabase Backend                               │
+│  ├─ PostgreSQL Database                         │
+│  ├─ Auth (Google OAuth)                         │
+│  └─ Row Level Security (RLS)                    │
+└─────────────────────────────────────────────────┘
+```
+
+### 主要ディレクトリ
+
+```
+├── app
+    ├── (main)
+    │   ├── layout.tsx                             ##共通レイアウト
+    │   ├── page.tsx                               ##/ページ
+    │   └── todo
+    │   │   └── page.tsx                           ##/todoページ
+    ├── account
+    │   └── page.tsx                               ##アカウントページ
+    ├── api
+    │   └── todos
+    │   │   ├── bulk-insert
+    │   │       └── route.ts                       ##一括挿入
+    │   │   └── route.ts                           ##CRUD API
+    ├── auth
+    │   └── callback
+    │   │   └── page.tsx                           ##GoogleOAuthコールバック
+    ├── globals.css                                ##カラーテーマ定義
+    └── layout.tsx                                 
+├── components
+    ├── AuthInitializer.tsx                        ##認証ストア初期化
+    ├── Header.tsx                                 ##ヘッダー
+    ├── Listview.tsx
+    ├── Themebutton.tsx
+    ├── TodoSkeleton.tsx                           ##Skeleton UI
+    ├── app-sidebar.tsx
+    ├── theme-provider.tsx
+    └── ui                                         ##shadcn/ui
+        └── ...
+├── hooks
+    └── useTodos.ts                                ##Todo用カスタムフック
+├── lib
+    ├── supabase.ts                    
+    └── utils.ts
+└── stores
+    └── useAuthStore.ts                            ##認証 + localStorageのマージ
+
+```
+
+### 状態遷移
+```
+[未ログイン状態]
+ユーザーのCRUD操作
    ↓
-[Supabase (Auth + DB)]
+localStorage に保存
+   ↓
+[ログイン実行]
+Google OAuth → Supabase Auth
+   ↓
+既存のlocalStorage データを読み取り
+   ↓
+POST /api/todos/bulk-insert (データの一括挿入)
+   ↓
+Supabase DBに永続化 + localStorage 削除
+[ログイン状態]
+ユーザーのCRUD操作
+   ↓
+CRUD /api/todos
 ```
 
 ## データベース
 ### テーブル定義
-```
+```postgres
 CREATE TABLE todos (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   taskname TEXT NOT NULL,
-  done BOOLEAN DEFAULT false
+  done BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now();
 )
 ```
 
 ### RLSポリシー
-```
+```postgres
 ALTER TABLE todos ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view their own todos"
@@ -125,25 +223,17 @@ FOR DELETE
 USING (auth.uid() = user_id);
 ```
 
-## 主要なディレクトリ
 
-```
-.
- └─ app
-    ├── api/todos/route.ts  -Supabaseと通信するRoute Handler
-    ├── auth/callback.tsx  -Google認証コールバック
-    ├── globals.css -カラーテーマの定義
-    └── login/page.tsx  -ログイン画面
+<!-- ## 主要なコミットの意図・気づき -->
 
- └─ components
-    ├── ui/ -shadcn/uiのコンポーネント
-    └── Todo.tsx - TODOリストのUIとfetcher
 
-```
+## クイックスタート
 
-## 今後の展望
-* ここで学習した技術を活用して、より複雑なアーキテクチャのアプリケーションを開発する。
+省略
 
-* 動的ルーティングを中心とした、ネストしたディレクトリ構成でのAPI作成に取り組む。
+## ライセンス
 
-* 段階的な機能追加を行う開発ではなく、一般的な開発手法に基づいて開発を行う。
+MIT License
+
+<!-- ## 反省点・今後の展望 -->
+
