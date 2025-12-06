@@ -70,7 +70,7 @@ Googleアカウントが無くても操作が可能です(未ログイン時はl
 | 技術 | バージョン |
 | ------------ | ---------- |
 | React                | 19.1.0   |
-| Next.js / App Router  | 15.5.6   |
+| Next.js / App Router  | 16.0.7   |
 | TypeScript          | 5.9.3    |
 | Zustand | 11.5.2 |
 | shadcn/ui | 3.5.0 |
