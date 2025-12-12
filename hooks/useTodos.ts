@@ -75,8 +75,9 @@ const useTodos = () => {
       setTodos(prev =>
         prev.map(t => t.id === optimisticTodo.id ? newTodo : t)
       );
-    } catch {
+    } catch (error) {
       setTodos(prev => prev.filter(t => t.id !== optimisticTodo.id));
+      console.error(error)
     }
   };
 
